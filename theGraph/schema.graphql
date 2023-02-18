@@ -1,0 +1,9 @@
+type Token @entity {
+  id: ID!
+  owner: Owner!
+  tokenURI: String!
+}
+
+type Owner @entity {
+  id: ID!
+  tokens: [Token!]! @derivedFrom(field: "owner")

@@ -1,0 +1,21 @@
+{
+  "name": "thegraph",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ ERC721",
+    "create-local": "graph create --node http://localhost:8020/ ERC721",
+    "remove-local": "graph remove --node http://localhost:8020/ ERC721",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 ERC721",
+    "test": "graph test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@graphprotocol/graph-cli": "^0.40.0"
+  }
+}
