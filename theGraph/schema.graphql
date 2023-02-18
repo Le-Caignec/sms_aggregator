@@ -1,9 +1,10 @@
-type Token @entity {
-  id: ID!
-  owner: Owner!
-  tokenURI: String!
+type ScretAdded @entity(immutable: true) {
+  id: Bytes!
+  _from: Bytes! # address
+  key: String! # string
+  date: BigInt! # uint256
+  description: String! # string
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
 }
-
-type Owner @entity {
-  id: ID!
-  tokens: [Token!]! @derivedFrom(field: "owner")
