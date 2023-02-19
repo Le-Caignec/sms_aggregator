@@ -19,8 +19,14 @@ contract SMS_Aggregator {
         string description
     );
 
+    event newPerson(address indexed _from);
+
     // Add a secret
     function addScret(string memory _key, uint _date, string memory _description) public {
+        // Check if a person exists
+        if (secretCounts[msg.sender] == 0) {
+            emit newPerson(msg.sender);
+        }
         uint _index = secretCounts[msg.sender] + 1;
         people[msg.sender][_index] = Scret(_key, _date, _description);
         secretCounts[msg.sender]++;

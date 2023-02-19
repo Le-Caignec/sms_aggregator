@@ -1,6 +1,6 @@
 specVersion: 0.0.5
 schema:
-  file: ./schema.graphql
+  file: schema.graphql
 dataSources:
   - kind: ethereum
     name: SMS_Aggregator
@@ -18,10 +18,10 @@ dataSources:
         - newPerson
       abis:
         - name: SMS_Aggregator
-          file: ./abis/SMS_Aggregator.json
+          file: SMS_Aggregator/abis/SMS_Aggregator.json
       eventHandlers:
         - event: ScretAdded(indexed address,string,uint256,string)
           handler: handleScretAdded
         - event: newPerson(indexed address)
           handler: handlenewPerson
-      file: ./src/sms-aggregator.ts
+      file: SMS_Aggregator/SMS_Aggregator.wasm

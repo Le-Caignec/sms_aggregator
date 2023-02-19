@@ -1,6 +1,9 @@
 import { newMockEvent } from "matchstick-as"
 import { ethereum, Address, BigInt } from "@graphprotocol/graph-ts"
-import { ScretAdded } from "../generated/SMS_Aggregator/SMS_Aggregator"
+import {
+  ScretAdded,
+  newPerson
+} from "../generated/SMS_Aggregator/SMS_Aggregator"
 
 export function createScretAddedEvent(
   _from: Address,
@@ -29,4 +32,16 @@ export function createScretAddedEvent(
   )
 
   return scretAddedEvent
+}
+
+export function createnewPersonEvent(_from: Address): newPerson {
+  let newPersonEvent = changetype<newPerson>(newMockEvent())
+
+  newPersonEvent.parameters = new Array()
+
+  newPersonEvent.parameters.push(
+    new ethereum.EventParam("_from", ethereum.Value.fromAddress(_from))
+  )
+
+  return newPersonEvent
 }

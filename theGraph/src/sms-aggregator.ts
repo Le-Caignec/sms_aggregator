@@ -1,5 +1,8 @@
-import { ScretAdded as ScretAddedEvent } from "../generated/SMS_Aggregator/SMS_Aggregator"
-import { ScretAdded } from "../generated/schema"
+import {
+  ScretAdded as ScretAddedEvent,
+  newPerson as newPersonEvent
+} from "../generated/SMS_Aggregator/SMS_Aggregator"
+import { ScretAdded, newPerson } from "../generated/schema"
 
 export function handleScretAdded(event: ScretAddedEvent): void {
   let entity = new ScretAdded(
@@ -10,9 +13,14 @@ export function handleScretAdded(event: ScretAddedEvent): void {
   entity.date = event.params.date
   entity.description = event.params.description
 
-  entity.blockNumber = event.block.number
-  entity.blockTimestamp = event.block.timestamp
-  entity.transactionHash = event.transaction.hash
+  entity.save()
+}
+
+export function handlenewPerson(event: newPersonEvent): void {
+  let entity = new newPerson(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  )
+  entity._from = event.params._from
 
   entity.save()
 }

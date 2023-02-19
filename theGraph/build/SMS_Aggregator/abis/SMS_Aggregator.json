@@ -45,9 +45,21 @@
   },
   {
     "inputs": [
-      { "internalType": "string", "name": "_key", "type": "string" },
-      { "internalType": "uint256", "name": "_date", "type": "uint256" },
-      { "internalType": "string", "name": "_description", "type": "string" }
+      {
+        "internalType": "string",
+        "name": "_key",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_date",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "_description",
+        "type": "string"
+      }
     ],
     "name": "addScret",
     "outputs": [],
@@ -60,9 +72,21 @@
     "outputs": [
       {
         "components": [
-          { "internalType": "string", "name": "key", "type": "string" },
-          { "internalType": "uint256", "name": "date", "type": "uint256" },
-          { "internalType": "string", "name": "description", "type": "string" }
+          {
+            "internalType": "string",
+            "name": "key",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "date",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "description",
+            "type": "string"
+          }
         ],
         "internalType": "struct SMS_Aggregator.Scret[]",
         "name": "",

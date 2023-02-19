@@ -1,13 +1,13 @@
 {
-  "name": "sms_aggregator",
+  "name": "SMS_Aggregator",
   "license": "UNLICENSED",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ Le-Caignec/sms_aggregator",
-    "create-local": "graph create --node http://localhost:8020/ Le-Caignec/sms_aggregator",
-    "remove-local": "graph remove --node http://localhost:8020/ Le-Caignec/sms_aggregator",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 Le-Caignec/sms_aggregator",
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ SMS_Aggregator",
+    "create-local": "graph create --node http://localhost:8020/ SMS_Aggregator",
+    "remove-local": "graph remove --node http://localhost:8020/ SMS_Aggregator",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 SMS_Aggregator",
     "test": "graph test"
   },
   "dependencies": {

@@ -40,6 +40,24 @@ export class ScretAdded__Params {
   }
 }
 
+export class newPerson extends ethereum.Event {
+  get params(): newPerson__Params {
+    return new newPerson__Params(this);
+  }
+}
+
+export class newPerson__Params {
+  _event: newPerson;
+
+  constructor(event: newPerson) {
+    this._event = event;
+  }
+
+  get _from(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+}
+
 export class SMS_Aggregator__getMyScretResultValue0Struct extends ethereum.Tuple {
   get key(): string {
     return this[0].toString();
