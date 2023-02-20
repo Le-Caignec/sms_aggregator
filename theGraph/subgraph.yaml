@@ -1,27 +1,26 @@
 specVersion: 0.0.5
+description: SMS Aggregator for user memo
 schema:
   file: ./schema.graphql
 dataSources:
-  - kind: ethereum
+  - kind: ethereum/contract
     name: SMS_Aggregator
-    network: mainnet
+    network: bellecour
     source:
-      address: "0x14475702fE7086AB04964fDe3359FD305e1329f0"
+      address: '0xD4DFbB2Fc80552AA0558b664A321Fb60Dcf9636c'
       abi: SMS_Aggregator
-      startBlock: 20950639
+      startBlock: 20950910
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - ScretAdded
-        - newPerson
+        - Secret
+        - Person
       abis:
         - name: SMS_Aggregator
           file: ./abis/SMS_Aggregator.json
       eventHandlers:
-        - event: ScretAdded(indexed address,string,uint256,string)
-          handler: handleScretAdded
-        - event: newPerson(indexed address)
-          handler: handlenewPerson
+        - event: SecretAdded(indexed address,string,uint256,string)
+          handler: handleSecretAdded
       file: ./src/sms-aggregator.ts

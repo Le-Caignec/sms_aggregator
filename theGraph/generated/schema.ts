@@ -11,7 +11,7 @@ import {
   BigDecimal
 } from "@graphprotocol/graph-ts";
 
-export class ScretAdded extends Entity {
+export class Person extends Entity {
   constructor(id: Bytes) {
     super();
     this.set("id", Value.fromBytes(id));
@@ -19,20 +19,18 @@ export class ScretAdded extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save ScretAdded entity without an ID");
+    assert(id != null, "Cannot save Person entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.BYTES,
-        `Entities of type ScretAdded must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type Person must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("ScretAdded", id.toBytes().toHexString(), this);
+      store.set("Person", id.toBytes().toHexString(), this);
     }
   }
 
-  static load(id: Bytes): ScretAdded | null {
-    return changetype<ScretAdded | null>(
-      store.get("ScretAdded", id.toHexString())
-    );
+  static load(id: Bytes): Person | null {
+    return changetype<Person | null>(store.get("Person", id.toHexString()));
   }
 
   get id(): Bytes {
@@ -42,6 +40,55 @@ export class ScretAdded extends Entity {
 
   set id(value: Bytes) {
     this.set("id", Value.fromBytes(value));
+  }
+
+  get secrets(): Array<string> | null {
+    let value = this.get("secrets");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set secrets(value: Array<string> | null) {
+    if (!value) {
+      this.unset("secrets");
+    } else {
+      this.set("secrets", Value.fromStringArray(<Array<string>>value));
+    }
+  }
+}
+
+export class Secret extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Secret entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type Secret must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("Secret", id.toString(), this);
+    }
+  }
+
+  static load(id: string): Secret | null {
+    return changetype<Secret | null>(store.get("Secret", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
   }
 
   get _from(): Bytes {
@@ -71,109 +118,20 @@ export class ScretAdded extends Entity {
     this.set("date", Value.fromBigInt(value));
   }
 
-  get description(): string {
+  get description(): string | null {
     let value = this.get("description");
-    return value!.toString();
-  }
-
-  set description(value: string) {
-    this.set("description", Value.fromString(value));
-  }
-
-  get blockNumber(): BigInt {
-    let value = this.get("blockNumber");
-    return value!.toBigInt();
-  }
-
-  set blockNumber(value: BigInt) {
-    this.set("blockNumber", Value.fromBigInt(value));
-  }
-
-  get blockTimestamp(): BigInt {
-    let value = this.get("blockTimestamp");
-    return value!.toBigInt();
-  }
-
-  set blockTimestamp(value: BigInt) {
-    this.set("blockTimestamp", Value.fromBigInt(value));
-  }
-
-  get transactionHash(): Bytes {
-    let value = this.get("transactionHash");
-    return value!.toBytes();
-  }
-
-  set transactionHash(value: Bytes) {
-    this.set("transactionHash", Value.fromBytes(value));
-  }
-}
-
-export class newPerson extends Entity {
-  constructor(id: Bytes) {
-    super();
-    this.set("id", Value.fromBytes(id));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(id != null, "Cannot save newPerson entity without an ID");
-    if (id) {
-      assert(
-        id.kind == ValueKind.BYTES,
-        `Entities of type newPerson must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
-      );
-      store.set("newPerson", id.toBytes().toHexString(), this);
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
     }
   }
 
-  static load(id: Bytes): newPerson | null {
-    return changetype<newPerson | null>(
-      store.get("newPerson", id.toHexString())
-    );
-  }
-
-  get id(): Bytes {
-    let value = this.get("id");
-    return value!.toBytes();
-  }
-
-  set id(value: Bytes) {
-    this.set("id", Value.fromBytes(value));
-  }
-
-  get _from(): Bytes {
-    let value = this.get("_from");
-    return value!.toBytes();
-  }
-
-  set _from(value: Bytes) {
-    this.set("_from", Value.fromBytes(value));
-  }
-
-  get blockNumber(): BigInt {
-    let value = this.get("blockNumber");
-    return value!.toBigInt();
-  }
-
-  set blockNumber(value: BigInt) {
-    this.set("blockNumber", Value.fromBigInt(value));
-  }
-
-  get blockTimestamp(): BigInt {
-    let value = this.get("blockTimestamp");
-    return value!.toBigInt();
-  }
-
-  set blockTimestamp(value: BigInt) {
-    this.set("blockTimestamp", Value.fromBigInt(value));
-  }
-
-  get transactionHash(): Bytes {
-    let value = this.get("transactionHash");
-    return value!.toBytes();
-  }
-
-  set transactionHash(value: Bytes) {
-    this.set("transactionHash", Value.fromBytes(value));
+  set description(value: string | null) {
+    if (!value) {
+      this.unset("description");
+    } else {
+      this.set("description", Value.fromString(<string>value));
+    }
   }
 }

@@ -1,13 +1,12 @@
-type ScretAdded @entity {
-  id: Bytes!
-  _from: newPerson! # Personn
-  key: String! # string
-  date: BigInt! # uint256
-  description: String! # string
+type Person @entity {
+  id: Bytes! # address
+  secrets: [Secret!] @derivedFrom(field: "_from")
 }
 
-type newPerson @entity {
-  id: Bytes!
-  _from: Bytes! # address
-  secrets: [ScretAdded!]! @derivedFrom(field: "_from")
+type Secret @entity {
+  id: String!
+  _from: Person! # Personn
+  key: String! # string
+  date: BigInt! # uint256
+  description: String # string
 }

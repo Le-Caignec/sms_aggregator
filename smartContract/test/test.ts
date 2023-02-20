@@ -3,7 +3,7 @@ import { anyValue } from "@nomicfoundation/hardhat-chai-matchers/withArgs";
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
-describe("Lock", function () {
+describe("Test SMS_Aggregator", function () {
 
   async function deployFixture() {
     // Contracts are deployed using the first signer/account by default
@@ -14,12 +14,8 @@ describe("Lock", function () {
   }
 
   describe("function", function () {
-    async function functionLoadFixture() {
-
-    }
-
     it("Add & Get Function Should set the right value", async function () {
-      const { sms_aggreagator, owner } = await loadFixture(deployFixture);
+      const { sms_aggreagator } = await loadFixture(deployFixture);
       await sms_aggreagator.addScret("0.1", 1676739703, "La Descripion de mon secret 1");
       await sms_aggreagator.addScret("0.2", 1676739703, "La Descripion de mon secret 1");
 
@@ -34,12 +30,22 @@ describe("Lock", function () {
       expect(await sms_aggreagator.connect(signer2).getMyScret()).to.deep.equal([["1.1", 1676739703, "La Descripion de mon secret 1"], ["1.2", 1676739703, "La Descripion de mon secret 1"]]);
     });
 
-
   });
 
   describe("Events", function () {
+    it("Should catch event when a new person is added", async function () {
+      const { sms_aggreagator, owner, otherAccount } = await loadFixture(deployFixture);
+      const signer2 = await ethers.getSigner(otherAccount.address)
 
-    it("Should emit an event on addScret", async function () {
+      await expect(sms_aggreagator.addScret("1", 1676739703, "La Descripion de mon secret"))
+        .to.emit(sms_aggreagator, "newPerson")
+        .withArgs(owner.address);
+      await expect(sms_aggreagator.connect(signer2).addScret("1", 1676739703, "La Descripion de mon secret"))
+        .to.emit(sms_aggreagator, "newPerson")
+        .withArgs(otherAccount.address);
+
+    });
+    it("Should catch event when a new secret is added", async function () {
       const { sms_aggreagator, owner } = await loadFixture(deployFixture);
 
       await expect(sms_aggreagator.addScret("1", 1676739703, "La Descripion de mon secret"))

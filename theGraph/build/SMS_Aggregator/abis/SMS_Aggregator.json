@@ -1,5 +1,10 @@
 [
   {
+    "inputs": [],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
     "anonymous": false,
     "inputs": [
       {
@@ -27,20 +32,7 @@
         "type": "string"
       }
     ],
-    "name": "ScretAdded",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "_from",
-        "type": "address"
-      }
-    ],
-    "name": "newPerson",
+    "name": "SecretAdded",
     "type": "event"
   },
   {
@@ -61,7 +53,7 @@
         "type": "string"
       }
     ],
-    "name": "addScret",
+    "name": "addSecret",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -88,7 +80,7 @@
             "type": "string"
           }
         ],
-        "internalType": "struct SMS_Aggregator.Scret[]",
+        "internalType": "struct SMS_Aggregator.Secret[]",
         "name": "",
         "type": "tuple[]"
       }

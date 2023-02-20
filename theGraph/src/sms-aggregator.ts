@@ -1,26 +1,24 @@
 import {
-  ScretAdded as ScretAddedEvent,
-  newPerson as newPersonEvent
+  SecretAdded as SecretAddedEvent
 } from "../generated/SMS_Aggregator/SMS_Aggregator"
-import { ScretAdded, newPerson } from "../generated/schema"
+import { Secret, Person } from "../generated/schema"
 
-export function handleScretAdded(event: ScretAddedEvent): void {
-  let entity = new ScretAdded(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
+export function handleSecretAdded(event: SecretAddedEvent): void {
+  //person
+  let person = Person.load(event.params._from);
+  if (!person) {
+    person = new Person(event.params._from)
+  }
+  person.save()
+  
+  //secret
+  let secret = new Secret(
+    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
   )
-  entity._from = event.params._from
-  entity.key = event.params.key
-  entity.date = event.params.date
-  entity.description = event.params.description
+  secret._from = event.params._from
+  secret.key = event.params.key
+  secret.date = event.params.date
+  secret.description = event.params.description
 
-  entity.save()
-}
-
-export function handlenewPerson(event: newPersonEvent): void {
-  let entity = new newPerson(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  )
-  entity._from = event.params._from
-
-  entity.save()
+  secret.save()
 }

@@ -10,16 +10,16 @@ import {
   BigInt
 } from "@graphprotocol/graph-ts";
 
-export class ScretAdded extends ethereum.Event {
-  get params(): ScretAdded__Params {
-    return new ScretAdded__Params(this);
+export class SecretAdded extends ethereum.Event {
+  get params(): SecretAdded__Params {
+    return new SecretAdded__Params(this);
   }
 }
 
-export class ScretAdded__Params {
-  _event: ScretAdded;
+export class SecretAdded__Params {
+  _event: SecretAdded;
 
-  constructor(event: ScretAdded) {
+  constructor(event: SecretAdded) {
     this._event = event;
   }
 
@@ -37,24 +37,6 @@ export class ScretAdded__Params {
 
   get description(): string {
     return this._event.parameters[3].value.toString();
-  }
-}
-
-export class newPerson extends ethereum.Event {
-  get params(): newPerson__Params {
-    return new newPerson__Params(this);
-  }
-}
-
-export class newPerson__Params {
-  _event: newPerson;
-
-  constructor(event: newPerson) {
-    this._event = event;
-  }
-
-  get _from(): Address {
-    return this._event.parameters[0].value.toAddress();
   }
 }
 
@@ -107,20 +89,46 @@ export class SMS_Aggregator extends ethereum.SmartContract {
   }
 }
 
-export class AddScretCall extends ethereum.Call {
-  get inputs(): AddScretCall__Inputs {
-    return new AddScretCall__Inputs(this);
+export class ConstructorCall extends ethereum.Call {
+  get inputs(): ConstructorCall__Inputs {
+    return new ConstructorCall__Inputs(this);
   }
 
-  get outputs(): AddScretCall__Outputs {
-    return new AddScretCall__Outputs(this);
+  get outputs(): ConstructorCall__Outputs {
+    return new ConstructorCall__Outputs(this);
   }
 }
 
-export class AddScretCall__Inputs {
-  _call: AddScretCall;
+export class ConstructorCall__Inputs {
+  _call: ConstructorCall;
 
-  constructor(call: AddScretCall) {
+  constructor(call: ConstructorCall) {
+    this._call = call;
+  }
+}
+
+export class ConstructorCall__Outputs {
+  _call: ConstructorCall;
+
+  constructor(call: ConstructorCall) {
+    this._call = call;
+  }
+}
+
+export class AddSecretCall extends ethereum.Call {
+  get inputs(): AddSecretCall__Inputs {
+    return new AddSecretCall__Inputs(this);
+  }
+
+  get outputs(): AddSecretCall__Outputs {
+    return new AddSecretCall__Outputs(this);
+  }
+}
+
+export class AddSecretCall__Inputs {
+  _call: AddSecretCall;
+
+  constructor(call: AddSecretCall) {
     this._call = call;
   }
 
@@ -137,10 +145,10 @@ export class AddScretCall__Inputs {
   }
 }
 
-export class AddScretCall__Outputs {
-  _call: AddScretCall;
+export class AddSecretCall__Outputs {
+  _call: AddSecretCall;
 
-  constructor(call: AddScretCall) {
+  constructor(call: AddSecretCall) {
     this._call = call;
   }
 }
