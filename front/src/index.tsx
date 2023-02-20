@@ -1,19 +1,25 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import './index.css'
+import { BrowserRouter } from 'react-router-dom'
+import App from './App'
+import ScrollToTop from './utils/ScrollToTop'
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
+// Apollo Client
+const client = new ApolloClient({
+  uri: 'https://thegraph.bellecour.iex.ec/subgraphs/name/bellecour/erc721',
+  cache: new InMemoryCache(),
+})
+
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+    <BrowserRouter>
+      <ApolloProvider client={client}>
+        <ScrollToTop />
+        <App />
+      </ApolloProvider>
+    </BrowserRouter>
+  </React.StrictMode>,
+)
