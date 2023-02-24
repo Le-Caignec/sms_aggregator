@@ -1,5 +1,5 @@
 import { Chain } from '@wagmi/core'
-import SMS_Aggregator from '../utils/abiSmsAggragator.json'
+import SMS_Aggregator from './abiSmsAggragator.json'
 import { useContract, useProvider } from 'wagmi'
 
 //global variables
@@ -13,7 +13,7 @@ export const bellecour = {
         decimals: 18,
         name: 'xRLC',
         symbol: 'xRLC',
-        },
+    },
     rpcUrls: {
         public: { http: ['https://bellecour.iex.ec'] },
         default: { http: ['https://bellecour.iex.ec'] },
@@ -24,7 +24,7 @@ export const bellecour = {
     },
 } as const satisfies Chain
 
-export function Contract (){
+export function Contract() {
     const provider = useProvider()
     const contract = useContract({
         address: contractAddress_SMS_Aggregator,

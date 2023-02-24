@@ -7,6 +7,7 @@ import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
 import { WagmiConfig, createClient, configureChains } from 'wagmi'
 import { publicProvider } from 'wagmi/providers/public'
 import { bellecour } from './utils/wallet'
+import React from 'react'
 
 // Wagmi Client
 const { provider, webSocketProvider } = configureChains(
@@ -27,12 +28,15 @@ const clientApollo = new ApolloClient({
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
-  <BrowserRouter>
-    <ApolloProvider client={clientApollo}>
-      <WagmiConfig client={clientWagmi}>
-        <ScrollToTop />
-        <App />
-      </WagmiConfig>
-    </ApolloProvider>
-  </BrowserRouter>,
+  <React.StrictMode>
+    <BrowserRouter>
+      <ApolloProvider client={clientApollo}>
+        <WagmiConfig client={clientWagmi}>
+          <ScrollToTop />
+          <App />
+        </WagmiConfig>
+      </ApolloProvider>
+    </BrowserRouter>
+    ,
+  </React.StrictMode>,
 )
