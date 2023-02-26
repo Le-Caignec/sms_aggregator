@@ -1,41 +1,23 @@
 import './AddSecret.css'
 import { Button, Form, Row, Col } from 'react-bootstrap'
-import { IExecSecretsModule } from 'iexec'
-import IExecConfig from 'iexec/IExecConfig'
-import { useProvider } from 'wagmi'
-import { bellecour } from '../utils/wallet'
-import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 import { useState } from 'react'
 import { v4 as uuid } from 'uuid'
+import { useSelector } from 'react-redux'
+import { IExec } from 'iexec'
 
 export default function AddSecret() {
+  const iexec = useSelector((state: any) => state.account.iExec) as IExec
   const [mySecretKey, setMySecretKey] = useState<string>('')
-  const [mySecretValue, setMySecretValue] = useState<string>('')
-  const [mySecretDescription, setMySecretDescription] = useState<string>('')
-
-  const connector = new MetaMaskConnector({
-    chains: [bellecour],
-  })
+  const [mySecretValue, setMySecretValue] = useState<string>('') // eslint-disable-next-line
+  const [mySecretDescription, setMySecretDescription] = useState<string>('') 
 
   const handleSubmit = async () => {
-    let prodiver = (await connector.getProvider()) as any
-    const config = new IExecConfig({ ethProvider: prodiver })
-    const sms = IExecSecretsModule.fromConfig(config)
+    const sms = iexec.secrets
     const { isPushed } = await sms.pushRequesterSecret(
       mySecretKey,
       mySecretValue,
     )
     console.log(`secret ${mySecretKey} set:`, isPushed)
-  }
-
-  const checkSecretExist = async () => {
-    const config = new IExecConfig({ ethProvider: window.ethereum })
-    const sms = IExecSecretsModule.fromConfig(config)
-    const isSecretSet = await sms.checkRequesterSecretExists(
-      '0xa1B1CAbE3FF10B0e08B95F74BF7A374A4A9f85d6',
-      mySecretKey,
-    )
-    console.log(`secret ${mySecretKey} set:`, isSecretSet)
   }
 
   return (
@@ -64,7 +46,7 @@ export default function AddSecret() {
           <Form.Group className="mb-3">
             <Form.Label>The description of your secret</Form.Label>
             <Form.Control
-              type="email"
+              type="text"
               placeholder="Enter description"
               onChange={(e) => setMySecretDescription(e.target.value)}
             />

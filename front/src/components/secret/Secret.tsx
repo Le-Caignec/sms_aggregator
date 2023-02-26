@@ -1,9 +1,15 @@
 import './Secret.css'
 import { Card } from 'react-bootstrap'
+import { useState } from 'react'
+import {ModalSecret} from '../../components'
 
 export default function Secret() {
+  const [show, setShow] = useState<boolean>(false);
+  const handleClose = () => setShow(false);
+
   return (
-    <Card id="secret">
+    <div className='secret'>
+    <Card onClick={()=>setShow(true)} id="secret">
       <Card.Body>
         <Card.Title>Card Title</Card.Title>
         <Card.Subtitle className="mb-2 text-muted">Card Subtitle</Card.Subtitle>
@@ -13,5 +19,7 @@ export default function Secret() {
         </Card.Text>
       </Card.Body>
     </Card>
+    <ModalSecret show={show} handleClose={handleClose} />
+    </div>
   )
 }

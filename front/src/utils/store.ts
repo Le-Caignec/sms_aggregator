@@ -1,20 +1,20 @@
 import { createSlice, configureStore, ThunkAction, Action } from '@reduxjs/toolkit'
 
-const forecastPronoSlice = createSlice({
-    name: 'forecastProno',
+const accountSlice = createSlice({
+    name: 'account',
     initialState: {
-        prono: [],
+        iExec: null,
     },
     reducers: {
-        updateForecastProno: (state, action) => {
-            state.prono = action.payload
+        updateIExecVar: (state, action) => {
+            state.iExec = action.payload
         },
     },
 })
 
 export const store = configureStore({
     reducer: {
-        forecastProno: forecastPronoSlice.reducer,
+        account: accountSlice.reducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
@@ -25,8 +25,8 @@ export const store = configureStore({
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;
 export type AppThunk<ReturnType = void> = ThunkAction<
-  ReturnType,
-  RootState,
-  unknown,
-  Action<string>
+    ReturnType,
+    RootState,
+    unknown,
+    Action<string>
 >;

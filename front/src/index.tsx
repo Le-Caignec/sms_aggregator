@@ -8,6 +8,8 @@ import { WagmiConfig, createClient, configureChains } from 'wagmi'
 import { publicProvider } from 'wagmi/providers/public'
 import { bellecour } from './utils/wallet'
 import React from 'react'
+import { store } from './utils/store'
+import { Provider } from 'react-redux'
 
 // Wagmi Client
 const { provider, webSocketProvider } = configureChains(
@@ -30,12 +32,14 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <ApolloProvider client={clientApollo}>
-        <WagmiConfig client={clientWagmi}>
-          <ScrollToTop />
-          <App />
-        </WagmiConfig>
-      </ApolloProvider>
+      <Provider store={store}>
+        <ApolloProvider client={clientApollo}>
+          <WagmiConfig client={clientWagmi}>
+            <ScrollToTop />
+            <App />
+          </WagmiConfig>
+        </ApolloProvider>
+      </Provider>
     </BrowserRouter>
     ,
   </React.StrictMode>,
