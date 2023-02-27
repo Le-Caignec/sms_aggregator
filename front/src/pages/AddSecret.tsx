@@ -7,9 +7,10 @@ import { IExec } from 'iexec'
 
 export default function AddSecret() {
   const iexec = useSelector((state: any) => state.account.iExec) as IExec
+  const contract = useSelector((state: any) => state.account.contract)
   const [mySecretKey, setMySecretKey] = useState<string>('')
   const [mySecretValue, setMySecretValue] = useState<string>('') // eslint-disable-next-line
-  const [mySecretDescription, setMySecretDescription] = useState<string>('') 
+  const [mySecretDescription, setMySecretDescription] = useState<string>('')
 
   const handleSubmit = async () => {
     const sms = iexec.secrets
@@ -18,6 +19,16 @@ export default function AddSecret() {
       mySecretValue,
     )
     console.log(`secret ${mySecretKey} set:`, isPushed)
+    const date = new Date()
+    const timestampInSeconds = Math.floor(date.getTime() / 1000)
+    if (isPushed) {
+      await contract.addSecret(
+        mySecretKey,
+        timestampInSeconds,
+        mySecretDescription,
+      )
+      console.log(`secret set in smart contract:`)
+    }
   }
 
   return (

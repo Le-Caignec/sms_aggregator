@@ -24,7 +24,7 @@ const clientWagmi = createClient({
 
 // Apollo Client
 const clientApollo = new ApolloClient({
-  uri: 'https://thegraph.bellecour.iex.ec/subgraphs/name/bellecour/erc721',
+  uri: 'http://127.0.0.1:8000/subgraphs/name/SMS_Aggregator',
   cache: new InMemoryCache(),
 })
 

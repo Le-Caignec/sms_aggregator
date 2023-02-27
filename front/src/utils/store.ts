@@ -4,10 +4,14 @@ const accountSlice = createSlice({
     name: 'account',
     initialState: {
         iExec: null,
+        contract: null
     },
     reducers: {
         updateIExecVar: (state, action) => {
             state.iExec = action.payload
+        },
+        updateContractVar: (state, action) => {
+            state.contract = action.payload
         },
     },
 })

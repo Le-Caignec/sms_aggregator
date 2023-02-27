@@ -4,12 +4,9 @@ import './Connect.css'
 import { useNavigate } from 'react-router-dom'
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 import { useAccount, useConnect } from 'wagmi'
-import { useEffect } from 'react'
-import { IExec } from 'iexec'
-import { useDispatch } from 'react-redux'
+import { useInitIExec, useInitContract } from '../utils/wallet'
 
 export default function Connect() {
-  const dispatch = useDispatch()
   const naviguate = useNavigate()
   const connector = new MetaMaskConnector({
     chains: [bellecour],
@@ -22,18 +19,8 @@ export default function Connect() {
 
   const { address, isConnecting, isConnected, isDisconnected } = useAccount()
 
-  useEffect(() => {
-    initIExec()
-  })
-
-  const initIExec = async () => {
-    const connector = new MetaMaskConnector({
-      chains: [bellecour],
-    })
-    let prodiver = (await connector.getProvider()) as any
-    const iexec = new IExec({ ethProvider: prodiver })
-    dispatch({ type: 'account/updateIExecVar', payload: iexec })
-  }
+  useInitIExec()
+  useInitContract()
 
   return (
     <div>

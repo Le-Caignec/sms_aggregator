@@ -1,6 +1,9 @@
 import { Chain } from '@wagmi/core'
 import SMS_Aggregator from './abiSmsAggragator.json'
 import { useContract, useProvider } from 'wagmi'
+import { IExec } from 'iexec'
+import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
+import { useDispatch } from 'react-redux'
 
 //global variables
 const contractAddress_SMS_Aggregator = process.env.REACT_APP_CONTRACT_ADDRESS!
@@ -24,12 +27,24 @@ export const bellecour = {
     },
 } as const satisfies Chain
 
-export function Contract() {
+export function useInitContract(): any {
+    const dispatch = useDispatch()
     const provider = useProvider()
     const contract = useContract({
         address: contractAddress_SMS_Aggregator,
         abi: SMS_Aggregator.abi,
         signerOrProvider: provider,
     })
-    return contract
+    dispatch({ type: 'account/updateContractVar', contract: contract })
+}
+
+export async function useInitIExec() {
+    const dispatch = useDispatch()
+    const connector = new MetaMaskConnector({
+        chains: [bellecour],
+    })
+    let prodiver = (await connector.getProvider()) as any
+    const iexec = new IExec({ ethProvider: prodiver })
+    dispatch({ type: 'account/updateIExecVar', payload: iexec })
+
 }
