@@ -2,3 +2,15 @@
   margin: auto;
   margin-right: 0px;
 }
+
+.tooltip-inner {
+  border: solid 1px #ff8700;
+  color: #ff8700;
+  z-index: 3 !important;
+}
+
+.bs-tooltip-bottom .tooltip-arrow::before {
+  border-bottom-color: #ff8700;
+  z-index: 3;
+}
+

@@ -4,21 +4,33 @@ import { useState } from 'react'
 import { v4 as uuid } from 'uuid'
 import { useSelector } from 'react-redux'
 import { IExec } from 'iexec'
+import { Contract } from 'ethers'
+import { useAccount } from 'wagmi'
 
 export default function AddSecret() {
   const iexec = useSelector((state: any) => state.account.iExec) as IExec
-  const contract = useSelector((state: any) => state.account.contract)
+  const contract = useSelector(
+    (state: any) => state.account.contract,
+  ) as Contract
   const [mySecretKey, setMySecretKey] = useState<string>('')
   const [mySecretValue, setMySecretValue] = useState<string>('') // eslint-disable-next-line
   const [mySecretDescription, setMySecretDescription] = useState<string>('')
+  const { address, isConnected } = useAccount() 
 
   const handleSubmit = async () => {
+    console.log(iexec, contract, address )
     const sms = iexec.secrets
-    const { isPushed } = await sms.pushRequesterSecret(
+    const isSecretSet = await sms.checkRequesterSecretExists(
+      address as string,
       mySecretKey,
-      mySecretValue,
     )
-    console.log(`secret ${mySecretKey} set:`, isPushed)
+    let isPushed = false
+    if (!isSecretSet) {
+      ({isPushed} = await sms.pushRequesterSecret(mySecretKey, mySecretValue))
+      console.log(`secret ${mySecretKey} set:`, isPushed)
+    } else {
+      alert(`secret ${mySecretKey} already set`)
+    }
     const date = new Date()
     const timestampInSeconds = Math.floor(date.getTime() / 1000)
     if (isPushed) {
@@ -36,12 +48,12 @@ export default function AddSecret() {
       <Row>
         <Form>
           <Form.Group className="mb-3">
-            <Form.Label>The Secret Key</Form.Label>
+            <Form.Label>The Public Key</Form.Label>
             <Row>
               <Col>
                 <Form.Control
                   type="email"
-                  placeholder="Enter Secret Key"
+                  placeholder="Enter Public Key"
                   value={mySecretKey}
                   onChange={(e) => setMySecretKey(e.target.value)}
                 />
@@ -57,9 +69,10 @@ export default function AddSecret() {
           <Form.Group className="mb-3">
             <Form.Label>The description of your secret</Form.Label>
             <Form.Control
-              type="text"
               placeholder="Enter description"
               onChange={(e) => setMySecretDescription(e.target.value)}
+              as="textarea"
+              rows={3}
             />
           </Form.Group>
           <br />

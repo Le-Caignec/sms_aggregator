@@ -7,7 +7,7 @@ import { NavBar } from './components'
 function App() {
   return (
     <div className="App">
-      <NavBar address="0x1234567890123456789012345678901234567890" />
+      <NavBar />
       <Routes>
         <Route path="/" element={<Connect />} />
         <Route path="/home" element={<Home />} />

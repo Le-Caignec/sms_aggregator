@@ -46,5 +46,4 @@ export async function useInitIExec() {
     let prodiver = (await connector.getProvider()) as any
     const iexec = new IExec({ ethProvider: prodiver })
     dispatch({ type: 'account/updateIExecVar', payload: iexec })
-
 }
