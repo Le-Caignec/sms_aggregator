@@ -2,44 +2,67 @@ import './AddSecret.css'
 import { Button, Form, Row, Col } from 'react-bootstrap'
 import { useState } from 'react'
 import { v4 as uuid } from 'uuid'
-import { useSelector } from 'react-redux'
-import { IExec } from 'iexec'
-import { Contract } from 'ethers'
-import { useAccount } from 'wagmi'
+import { useAppSelector } from '../app/hook'
+import {
+  selectAccountIexec,
+  selectAccountUserAddress,
+  usePushSecretMutation,
+  useCheckSecretMutation,
+} from '../app/accountSlice'
+
+interface Secret {
+  secretName: string
+  secretDescription: string
+  currentDate: string
+  secretValue: string
+}
+
+interface PushSecret {
+  secretName: string
+  secretValue: string
+}
+
+interface CheckSecret {
+  address: string
+  secretName: string
+}
 
 export default function AddSecret() {
-  const iexec = useSelector((state: any) => state.account.iExec) as IExec
-  const contract = useSelector(
-    (state: any) => state.account.contract,
-  ) as Contract
-  const [mySecretKey, setMySecretKey] = useState<string>('')
-  const [mySecretValue, setMySecretValue] = useState<string>('') // eslint-disable-next-line
-  const [mySecretDescription, setMySecretDescription] = useState<string>('')
-  const { address, isConnected } = useAccount() 
+  const userAddress = useAppSelector(selectAccountUserAddress)
+  const iexec = useAppSelector(selectAccountIexec)
+  let currentDateTime = (new Date().getTime() / 1000).toString()
+  const [mySecret, setMySecret] = useState<Secret>({
+    secretName: '',
+    secretDescription: '',
+    currentDate: currentDateTime,
+    secretValue: '',
+  })
 
-  const handleSubmit = async () => {
-    console.log(iexec, contract, address )
-    const sms = iexec.secrets
-    const isSecretSet = await sms.checkRequesterSecretExists(
-      address as string,
-      mySecretKey,
-    )
-    let isPushed = false
-    if (!isSecretSet) {
-      ({isPushed} = await sms.pushRequesterSecret(mySecretKey, mySecretValue))
-      console.log(`secret ${mySecretKey} set:`, isPushed)
-    } else {
-      alert(`secret ${mySecretKey} already set`)
-    }
-    const date = new Date()
-    const timestampInSeconds = Math.floor(date.getTime() / 1000)
-    if (isPushed) {
-      await contract.addSecret(
-        mySecretKey,
-        timestampInSeconds,
-        mySecretDescription,
-      )
-      console.log(`secret set in smart contract:`)
+  const [pushSecret, resultPush] = usePushSecretMutation()
+  const [checkSecret, resultCheck] = useCheckSecretMutation()
+
+  const pushSecretFunction = async (data: Secret) => {
+    if (
+      mySecret.secretName !== '' &&
+      mySecret.secretDescription !== '' &&
+      mySecret.secretValue !== '' &&
+      mySecret.currentDate !== '' &&
+      userAddress !== ''
+    ) {
+      const _mypushSecret: PushSecret = {
+        secretName: data.secretName,
+        secretValue: data.secretValue,
+      }
+      const _mycheckSecret: CheckSecret = {
+        address: userAddress,
+        secretName: data.secretName,
+      }
+      await checkSecret(_mycheckSecret)
+      if (!resultCheck?.data) {
+        console.log("Secret doesn't already exist")
+        await pushSecret(_mypushSecret)
+        console.log('push result : ', resultPush.data?.isPushed)
+      }
     }
   }
 
@@ -54,12 +77,21 @@ export default function AddSecret() {
                 <Form.Control
                   type="email"
                   placeholder="Enter Public Key"
-                  value={mySecretKey}
-                  onChange={(e) => setMySecretKey(e.target.value)}
+                  onChange={(e) =>
+                    setMySecret((prev) => ({
+                      ...prev,
+                      secretName: e.target.value,
+                    }))
+                  }
+                  value={mySecret?.secretName}
                 />
               </Col>
               <Col md="auto">
-                <Button onClick={() => setMySecretKey(uuid())}>
+                <Button
+                  onClick={() =>
+                    setMySecret((prev) => ({ ...prev, secretName: uuid() }))
+                  }
+                >
                   Generate Random Key
                 </Button>
               </Col>
@@ -70,7 +102,12 @@ export default function AddSecret() {
             <Form.Label>The description of your secret</Form.Label>
             <Form.Control
               placeholder="Enter description"
-              onChange={(e) => setMySecretDescription(e.target.value)}
+              onChange={(e) =>
+                setMySecret((prev) => ({
+                  ...prev,
+                  secretDescription: e.target.value,
+                }))
+              }
               as="textarea"
               rows={3}
             />
@@ -81,13 +118,18 @@ export default function AddSecret() {
             <Form.Control
               type="password"
               placeholder="Secret"
-              onChange={(e) => setMySecretValue(e.target.value)}
+              onChange={(e) =>
+                setMySecret((prev) => ({
+                  ...prev,
+                  secretValue: e.target.value,
+                }))
+              }
             />
           </Form.Group>
         </Form>
         <Col>
           <br />
-          <Button onClick={handleSubmit}>Submit</Button>
+          <Button onClick={() => pushSecretFunction(mySecret)}>Submit</Button>
         </Col>
       </Row>
     </div>

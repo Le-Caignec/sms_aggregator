@@ -9,8 +9,11 @@ import {
 import { useAccount, useDisconnect } from 'wagmi'
 import { useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
+import { useAppDispatch } from '../../app/hook'
+import { connect } from '../../app/accountSlice'
 
 export default function NavBar() {
+  const dispatch = useAppDispatch()
   const naviguate = useNavigate()
   const { address, isConnected } = useAccount()
   const { disconnect } = useDisconnect()
@@ -28,6 +31,10 @@ export default function NavBar() {
       naviguate('/')
     }
   }, [isConnected])
+
+  useEffect(() => {
+    dispatch(connect())
+  }, [dispatch, address])
 
   if (isConnected) {
     return (
