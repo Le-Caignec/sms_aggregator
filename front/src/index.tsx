@@ -61,6 +61,5 @@ root.render(
         </ApolloProvider>
       </Provider>
     </BrowserRouter>
-    ,
   </React.StrictMode>,
 )

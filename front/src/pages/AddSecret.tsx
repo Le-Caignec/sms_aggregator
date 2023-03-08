@@ -9,8 +9,9 @@ import {
   usePushSecretMutation,
   useCheckSecretMutation,
 } from '../app/accountSlice'
+import { usePushSecretContractMutation } from '../app/contractSlice'
 
-interface Secret {
+export interface Secret {
   secretName: string
   secretDescription: string
   currentDate: string
@@ -38,10 +39,11 @@ export default function AddSecret() {
     secretValue: '',
   })
 
-  const [pushSecret, resultPush] = usePushSecretMutation()
   const [checkSecret, resultCheck] = useCheckSecretMutation()
+  const [pushSecret, resultPush] = usePushSecretMutation()
+  const [pushSecret_SC, resultContract] = usePushSecretContractMutation()
 
-  const pushSecretFunction = async (data: Secret) => {
+  const pushSecretFunction = async (secret: Secret) => {
     if (
       mySecret.secretName !== '' &&
       mySecret.secretDescription !== '' &&
@@ -50,18 +52,25 @@ export default function AddSecret() {
       userAddress !== ''
     ) {
       const _mypushSecret: PushSecret = {
-        secretName: data.secretName,
-        secretValue: data.secretValue,
+        secretName: secret.secretName,
+        secretValue: secret.secretValue,
       }
       const _mycheckSecret: CheckSecret = {
         address: userAddress,
-        secretName: data.secretName,
+        secretName: secret.secretName,
       }
-      await checkSecret(_mycheckSecret)
-      if (!resultCheck?.data) {
+      const secretChecked = await checkSecret(_mycheckSecret)
+      console.log('check result : ', secretChecked)
+      if ('data' in secretChecked && !secretChecked?.data) {
         console.log("Secret doesn't already exist")
-        await pushSecret(_mypushSecret)
-        console.log('push result : ', resultPush.data?.isPushed)
+        const secretPushed = await pushSecret(_mypushSecret)
+        console.log('push result into sms : ', secretPushed)
+        if ('data' in secretPushed && secretPushed.data.isPushed) {
+          const tr = await pushSecret_SC({ secret: secret })
+          if ('data' in tr) {
+            console.log('push result in SC : ',tr.data);
+          }
+        }
       }
     }
   }

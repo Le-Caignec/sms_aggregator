@@ -1,13 +1,11 @@
-import { PayloadAction, createAsyncThunk, createSlice, ThunkDispatch, AnyAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, ThunkDispatch, AnyAction } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 import { IExec } from 'iexec'
-import { Contract } from 'ethers'
 import { api, getIexecAndRefresh } from './api'
 import { initIExec } from '../utils/wallet'
 
 export interface AccountState {
     iexec: IExec | null
-    contract: Contract | null
     userAddress: string
     status: "Not Connected" | "Connected" | "loading" | "failed"
     error: string | null;
@@ -15,14 +13,12 @@ export interface AccountState {
 
 const initialState: AccountState = {
     iexec: null,
-    contract: null,
     userAddress: "",
     status: "Not Connected",
     error: null
 }
 
-export const connect = createAsyncThunk("account/connect", async (_, { dispatch, getState }) => {
-    console.log("connect called")
+export const connectAccount = createAsyncThunk("account/connect", async (_, { dispatch, getState }) => {
     const iexec = (await initIExec()) as IExec;
     const userAddress = await iexec.wallet.getAddress();
 
@@ -43,22 +39,18 @@ export const resetAccountSlice = (dispatch: ThunkDispatch<unknown, unknown, AnyA
 export const accountSlice = createSlice({
     name: 'account',
     initialState: initialState,
-    reducers: {
-        updateContractVar: (state, action: PayloadAction<any>) => {
-            state.contract = action.payload
-        },
-    },
+    reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(connect.pending, (state) => {
+            .addCase(connectAccount.pending, (state) => {
                 state.status = "loading";
             })
-            .addCase(connect.fulfilled, (state, action) => {
+            .addCase(connectAccount.fulfilled, (state, action) => {
                 state.status = "Connected";
                 state.iexec = action.payload.iexec;
                 state.userAddress = action.payload.userAddress;
             })
-            .addCase(connect.rejected, (state, action) => {
+            .addCase(connectAccount.rejected, (state, action) => {
                 state.status = "failed";
                 state.error = "" + action.error.message;
             });
@@ -72,8 +64,6 @@ export const selectAccountIexec = (state: RootState) => state.account.iexec;
 export const selectAccountUserAddress = (state: RootState) => state.account.userAddress;
 export const selectAccountStatus = (state: RootState) => state.account.status;
 export const selectAccountError = (state: RootState) => state.account.error;
-export const selectAccountContract = (state: RootState) => state.account.contract;
-export const { updateContractVar } = accountSlice.actions;
 export default accountSlice.reducer;
 
 export const accountApi = api.injectEndpoints({
