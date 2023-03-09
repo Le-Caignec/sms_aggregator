@@ -70,45 +70,31 @@ export const accountApi = api.injectEndpoints({
     endpoints: (builder) => ({
         pushSecret: builder.mutation<
             { isPushed: boolean },
-            { secretName: string; secretValue: string }
+            { secretName: string; secretValue: string; address: string }
         >({
             queryFn: async (args, { getState }) => {
                 try {
                     const iexec = await getIexecAndRefresh(getState());
-                    let result = await iexec.secrets.pushRequesterSecret(args.secretName, args.secretValue);
-                    if (!result.isPushed) {
-                        return { error: "Unable to push secret" };
+                    let secretAlreadyExist = await iexec.secrets.checkRequesterSecretExists(args.address, args.secretName);
+                    if (secretAlreadyExist) {
+                        return { error: "Secret already exist" };
                     } else {
-                        return {
-                            data: result,
-                        };
+                        let result = await iexec.secrets.pushRequesterSecret(args.secretName, args.secretValue);
+                        if (!result.isPushed) {
+                            return { error: "Unable to push secret" };
+                        } else {
+                            return {
+                                data: result,
+                            };
+                        }
                     }
                 } catch (e) {
                     return { error: (e as Error).message || e };
                 }
             },
         }),
-
-        checkSecret: builder.mutation<
-            boolean,
-            { address: string; secretName: string }
-        >({
-            queryFn: async (args, { getState }) => {
-                try {
-                    const iexec = await getIexecAndRefresh(getState());
-                    let result = await iexec.secrets.checkRequesterSecretExists(args.address, args.secretName);
-                    return { data: result }
-                } catch (e) {
-                    return { error: (e as Error).message || e };
-                }
-            }
-
-        }),
     }),
 })
 
-export const {
-    usePushSecretMutation,
-    useCheckSecretMutation,
-} = accountApi;
+export const {usePushSecretMutation } = accountApi;
 

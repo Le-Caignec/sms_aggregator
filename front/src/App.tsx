@@ -13,7 +13,7 @@ function App() {
           <Route path="/appli/add_secret" element={<AddSecret />} />
           <Route path="/appli/check_secret" element={<CheckSecret />} />
         </Route>
-        <Route path="*" element={<Appli />} />
+        <Route path="*" element={<Home />} />
       </Routes>
     </div>
   )

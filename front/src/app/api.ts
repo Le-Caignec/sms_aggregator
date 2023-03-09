@@ -3,13 +3,14 @@ import { graphqlRequestBaseQuery } from "@rtk-query/graphql-request-base-query";
 import { IExec } from "iexec";
 import { RootState } from "./store";
 
-const HTTPS_URL = "https://thegraph.bellecour.iex.ec/subgraphs/name/bellecour/poco-v5";
+const HTTPS_URL = "http://127.0.0.1:8000/subgraphs/name/SMS_Aggregator";
 
 export const api = createApi({
   baseQuery: graphqlRequestBaseQuery({
     url: HTTPS_URL,
   }),
   tagTypes: ["ACCOUNT_BALANCES", "REQUEST_ORDERS"],
+  
   endpoints: (builder) => ({}),
 });
 

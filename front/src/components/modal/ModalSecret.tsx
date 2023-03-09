@@ -15,9 +15,6 @@ export default function ModalSecret(props: ModalProps) {
   const copyToClickBoard = () => {
     navigator.clipboard.writeText(props.secret.clef)
   }
-  const renderTooltip = () => (
-    <Tooltip id="button-tooltip">Simple tooltip</Tooltip>
-  )
   return (
     <div className="modalSecret">
       <Modal show={props.show} onHide={props.handleClose} centered>

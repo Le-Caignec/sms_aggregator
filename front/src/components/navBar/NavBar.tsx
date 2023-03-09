@@ -11,7 +11,6 @@ import { useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import { useAppDispatch } from '../../app/hook'
 import { connectAccount } from '../../app/accountSlice'
-import { connectContract } from '../../app/contractSlice'
 
 export default function NavBar() {
   const dispatch = useAppDispatch()
@@ -31,11 +30,10 @@ export default function NavBar() {
     if (!isConnected) {
       naviguate('/')
     }
-  }, [isConnected])
+  }, [isConnected, naviguate])
 
   useEffect(() => {
     dispatch(connectAccount())
-    dispatch(connectContract())
   }, [dispatch, address])
 
   if (isConnected) {

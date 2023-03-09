@@ -16,13 +16,13 @@ export default function Connect() {
 
   useEffect(() => {
     resetAccountSlice(dispatch)
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
     if (isConnected) {
-      naviguate('/appli')
+      naviguate('/appli/')
     }
-  }, [isConnected])
+  }, [isConnected, naviguate])
 
   return (
     <div>
