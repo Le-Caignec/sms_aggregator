@@ -7,7 +7,7 @@ import { timestampToDateString } from '../../utils/utils'
 export type SecretProps = {
   clef: string
   date: number
-  description: string
+  description: string | undefined
 }
 
 

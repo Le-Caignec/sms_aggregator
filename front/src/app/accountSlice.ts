@@ -3,6 +3,8 @@ import { RootState } from "./store";
 import { IExec } from 'iexec'
 import { api, getIexecAndRefresh } from './api'
 import { initIExec } from '../utils/wallet'
+import { gql } from "graphql-request";
+import { Person } from "../generated/graphql";
 
 export interface AccountState {
     iexec: IExec | null
@@ -70,11 +72,13 @@ export const accountApi = api.injectEndpoints({
     endpoints: (builder) => ({
         pushSecret: builder.mutation<
             { isPushed: boolean },
-            { secretName: string; secretValue: string; address: string }
+            { secretName: String; secretValue: String; address: string }
         >({
             queryFn: async (args, { getState }) => {
                 try {
                     const iexec = await getIexecAndRefresh(getState());
+                    console.log("args.address", args.address);
+                    console.log("args.secretName", args.secretName);
                     let secretAlreadyExist = await iexec.secrets.checkRequesterSecretExists(args.address, args.secretName);
                     if (secretAlreadyExist) {
                         return { error: "Secret already exist" };
@@ -89,12 +93,29 @@ export const accountApi = api.injectEndpoints({
                         }
                     }
                 } catch (e) {
-                    return { error: (e as Error).message || e };
+                    return { error: "test" + ((e as Error).message || e) };
                 }
             },
+        }),
+        getSecrets: builder.query<{ person: Person }, { walletAddress: string }>({
+            query: (args) => ({
+                document: gql`
+                query MySecret($walletAddress: String!) {
+                    person(id: $walletAddress) {
+                      secrets(orderDirection: asc, orderBy: date) {
+                        description
+                        id
+                        key
+                        date
+                      }
+                    }
+                  }
+              `,
+                variables: args,
+            }),
         }),
     }),
 })
 
-export const {usePushSecretMutation } = accountApi;
+export const { usePushSecretMutation, useLazyGetSecretsQuery } = accountApi;
 

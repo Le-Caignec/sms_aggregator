@@ -22,12 +22,7 @@ export default function Mint({ secret }: { secret: Secret }) {
   const userAddress = useAppSelector(selectAccountUserAddress)
   const [
     pushSecret,
-    {
-      data: pushSecret_data,
-      isSuccess: pushSecret_data_sucess,
-      error: msg,
-      status,
-    },
+    { data: pushSecret_data, isSuccess: pushSecret_data_sucess, error: msg },
   ] = usePushSecretMutation()
 
   const { config } = usePrepareContractWrite({
@@ -38,7 +33,7 @@ export default function Mint({ secret }: { secret: Secret }) {
   })
   const { data, write } = useContractWrite(config)
 
-  const { isLoading, isSuccess } = useWaitForTransaction({
+  const { isLoading, isSuccess, error } = useWaitForTransaction({
     hash: data?.hash,
   })
 
@@ -51,7 +46,6 @@ export default function Mint({ secret }: { secret: Secret }) {
       secret.currentDate !== 0 &&
       userAddress !== ''
     ) {
-      console.log("Secret doesn't already exist")
       await pushSecret({
         secretName: secret.secretName,
         secretValue: secret.secretValue,
@@ -64,12 +58,16 @@ export default function Mint({ secret }: { secret: Secret }) {
 
   return (
     <div>
-      <Button onClick={pushSecretFunction}>
-        {isLoading || status === QueryStatus.pending
-          ? 'Minting...'
-          : 'Push Secret'}
+      <Button
+        disabled={!write || isLoading}
+        onClick={() => {
+          pushSecretFunction()
+          write?.()
+        }}
+      >
+        {isLoading ? 'Minting...' : 'Push Secret'}
       </Button>
-      {isSuccess && pushSecret_data_sucess && pushSecret_data?.isPushed && (
+      {isSuccess && pushSecret_data_sucess && pushSecret_data?.isPushed ? (
         <div>
           <p>Successfully minted</p>
           <div>
@@ -82,8 +80,12 @@ export default function Mint({ secret }: { secret: Secret }) {
             </a>
           </div>
         </div>
+      ) : (
+        <>
+          <p>{msg as string}</p>
+          <p>{error?.toString()}</p>
+        </>
       )}
-      {(!pushSecret_data_sucess || !isSuccess) && <p>{msg as string}</p>}
     </div>
   )
 }

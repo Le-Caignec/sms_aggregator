@@ -1,0 +1,11 @@
+query Test {
+  persons {
+    id
+    secrets {
+      date
+      description
+      id
+      key
+    }
+  }
+}
