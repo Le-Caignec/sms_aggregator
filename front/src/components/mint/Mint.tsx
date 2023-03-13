@@ -12,7 +12,6 @@ import {
   useContractWrite,
   useWaitForTransaction,
 } from 'wagmi'
-import { QueryStatus } from '@reduxjs/toolkit/dist/query'
 
 //global variables
 const contractAddress_SMS_Aggregator = process.env

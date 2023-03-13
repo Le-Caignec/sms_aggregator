@@ -1,8 +1,10 @@
 import './AddSecret.css'
-import { Button, Form, Row, Col } from 'react-bootstrap'
+import { Button, Form, Row, Col, Container } from 'react-bootstrap'
 import { useState } from 'react'
 import { v4 as uuid } from 'uuid'
 import { Mint } from '../components'
+import { FaArrowLeft } from 'react-icons/fa'
+import { useNavigate } from 'react-router-dom'
 
 export interface Secret {
   secretName: string
@@ -12,6 +14,7 @@ export interface Secret {
 }
 
 export default function AddSecret() {
+  const naviguate = useNavigate()
   let currentDateTime = new Date().getTime()
   const [mySecret, setMySecret] = useState<Secret>({
     secretName: '',
@@ -21,8 +24,13 @@ export default function AddSecret() {
   })
 
   return (
-    <div className="add-secret">
-      <Row>
+    <Container className="add-secret">
+      <FaArrowLeft
+        id="comeBackArrow"
+        size={20}
+        onClick={() => naviguate('/appli')}
+      />
+      <Row id="mainRow">
         <Form>
           <Form.Group className="mb-3">
             <Form.Label>The Public Key</Form.Label>
@@ -86,6 +94,6 @@ export default function AddSecret() {
           <Mint secret={mySecret} />
         </Col>
       </Row>
-    </div>
+    </Container>
   )
 }

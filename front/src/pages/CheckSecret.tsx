@@ -3,24 +3,36 @@ import { Container, Row, Col } from 'react-bootstrap'
 import { Secret } from '../components'
 import { useLazyGetSecretsQuery } from '../app/accountSlice'
 import { useEffect } from 'react'
+import { useAppSelector } from '../app/hook'
+import { selectAccountUserAddress } from '../app/accountSlice'
+import { FaArrowLeft } from 'react-icons/fa'
+import { useNavigate } from 'react-router-dom'
 
 export default function CheckSecret() {
-  let walletAddress = '0x11ec6e62cdeb571f3b8591b8d1c50d7a5e4d626f'
-  const [getSecrets, { data, isLoading, isSuccess, error }] = useLazyGetSecretsQuery()
+  const naviguate = useNavigate()
+  let walletAddress = useAppSelector(selectAccountUserAddress)
+  const [
+    getSecrets,
+    { data, isLoading, isSuccess, error },
+  ] = useLazyGetSecretsQuery()
 
   useEffect(() => {
     getSecrets({ walletAddress })
   }, [getSecrets, walletAddress])
-  console.log(error)
   if (isLoading) return <p>Loading...</p>
   if (!isSuccess) return <p style={{ margin: '2%' }}>Error : {error as any}</p>
 
   return (
-    <div className="checkSecret">
+    <Container className="checkSecret">
+      <FaArrowLeft
+        id="comeBackArrow"
+        size={20}
+        onClick={() => naviguate('/appli')}
+      />
       <Container>
-        <Row lg={5} md={2} sm={2} xs={1}>
-          {data?.person.secrets?.length !== 0 ? (
-            data?.person.secrets?.map(({ id, date, description, key }) => (
+        <Row>
+          {data?.person ? (
+            data?.person?.secrets?.map(({ id, date, description, key }) => (
               <Col key={id}>
                 <Secret
                   clef={key}
@@ -30,12 +42,10 @@ export default function CheckSecret() {
               </Col>
             ))
           ) : (
-            <h1 style={{ textAlign: 'center' }}>
-              You have no secret registered in the SMS
-            </h1>
+            <p>You have no secret registered in the SMS</p>
           )}
         </Row>
       </Container>
-    </div>
+    </Container>
   )
 }

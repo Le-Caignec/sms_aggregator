@@ -1,21 +1,20 @@
 import './NavBar.css'
-import {
-  Navbar,
-  Button,
-  Container,
-  OverlayTrigger,
-  Tooltip,
-} from 'react-bootstrap'
+import { Navbar, Button, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { useAccount, useDisconnect } from 'wagmi'
 import { useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
-import { useAppDispatch } from '../../app/hook'
-import { connectAccount } from '../../app/accountSlice'
+import { useAppDispatch, useAppSelector } from '../../app/hook'
+import {
+  connectAccount,
+  selectthereIsSomeRequestPending,
+} from '../../app/accountSlice'
+import LoadingBar from '../loading/LoadingBar'
 
 export default function NavBar() {
   const dispatch = useAppDispatch()
   const naviguate = useNavigate()
   const { address, isConnected } = useAccount()
+  const isPending = useAppSelector(selectthereIsSomeRequestPending)
   const { disconnect } = useDisconnect()
 
   const shortAddress = (address: string) => {
@@ -36,23 +35,27 @@ export default function NavBar() {
     dispatch(connectAccount())
   }, [dispatch, address])
 
-  if (isConnected) {
-    return (
-      <Navbar id="navBar" fixed="top">
-        <Container fluid>
-          <OverlayTrigger
-            placement="bottom"
-            delay={{ show: 250, hide: 400 }}
-            overlay={<Tooltip> Click to Copy</Tooltip>}
-          >
-            <div style={{ cursor: 'pointer' }} onClick={copyToClickBoard}>
-              {shortAddress(address as string)}
-            </div>
-          </OverlayTrigger>
-          <Button onClick={() => disconnect()}>Disconnect</Button>
-        </Container>
-      </Navbar>
-    )
-  }
-  return <></>
+  return (
+    <div id="navBarDiv">
+      {isConnected ? (
+        <div>
+          {isPending && <LoadingBar />}
+          <Navbar id="navBar">
+            <OverlayTrigger
+              placement="bottom"
+              delay={{ show: 250, hide: 400 }}
+              overlay={<Tooltip> Click to Copy</Tooltip>}
+            >
+              <div style={{ cursor: 'pointer' }} onClick={copyToClickBoard}>
+                {shortAddress(address as string)}
+              </div>
+            </OverlayTrigger>
+            <Button onClick={() => disconnect()}>Disconnect</Button>
+          </Navbar>
+        </div>
+      ) : (
+        <></>
+      )}
+    </div>
+  )
 }

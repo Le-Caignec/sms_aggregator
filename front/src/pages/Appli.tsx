@@ -1,12 +1,13 @@
 import './Appli.css'
 import { Outlet } from 'react-router-dom'
 import { NavBar } from '../components'
+import { Container } from 'react-bootstrap'
 
 export default function Appli() {
   return (
-    <div>
+    <Container fluid>
       <NavBar />
       <Outlet />
-    </div>
+    </Container>
   )
 }
