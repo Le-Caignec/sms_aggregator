@@ -42,7 +42,8 @@ Ajouter les lignes suivantes dans .env fichier
 
 ```js
 GENERATE_SOURCEMAP = false //Generate source map
-REACT_APP_WALLET_CONNECT_PROJECT_ID = REACT_APP_CONTRACT_ADDRESS = 0xd4dfbb2fc80552aa0558b664a321fb60dcf9636c //Wallet Connect project id (https://cloud.walletconnect.com/sign-in) //Contract address
+REACT_APP_WALLET_CONNECT_PROJECT_ID = //Wallet Connect project id (https://cloud.walletconnect.com/sign-in)
+REACT_APP_CONTRACT_ADDRESS = 0xd4dfbb2fc80552aa0558b664a321fb60dcf9636c  //Contract address
 ```
 
 #### Démarrer le projet

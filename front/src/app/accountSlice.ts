@@ -92,7 +92,23 @@ export const accountApi = api.injectEndpoints({
                         }
                     }
                 } catch (e) {
-                    return { error: "test" + ((e as Error).message || e) };
+                    return { error: (e as Error).message || e };
+                }
+            },
+        }),
+        checkSecret: builder.mutation<
+            boolean,
+            { secretName: String; address: string }
+        >({
+            queryFn: async (args, { getState }) => {
+                try {
+                    const iexec = await getIexecAndRefresh(getState());
+                    let secretAlreadyExist = await iexec.secrets.checkRequesterSecretExists(args.address, args.secretName);
+                    return {
+                        data: secretAlreadyExist,
+                    };
+                } catch (e) {
+                    return { error: (e as Error).message || e };
                 }
             },
         }),
@@ -136,5 +152,5 @@ subscription MySecret($walletAddress: String!) {
   }
 `
 
-export const { usePushSecretMutation, useLazyGetSecretsQuery } = accountApi;
+export const { usePushSecretMutation, useLazyGetSecretsQuery, useCheckSecretMutation } = accountApi;
 

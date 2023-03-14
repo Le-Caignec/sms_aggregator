@@ -6,6 +6,7 @@ import { Secret } from '../../pages/AddSecret'
 import {
   selectAccountUserAddress,
   usePushSecretMutation,
+  useCheckSecretMutation,
 } from '../../app/accountSlice'
 import {
   usePrepareContractWrite,
@@ -24,6 +25,7 @@ export default function Mint({ secret }: { secret: Secret }) {
     pushSecret,
     { data: pushSecret_data, isSuccess: pushSecret_data_sucess, error: msg },
   ] = usePushSecretMutation()
+  const [checkSecret, { data: checkSecret_data }] = useCheckSecretMutation()
   const [secretReady, setSecretReady] = useState(false)
 
   const { config } = usePrepareContractWrite({
@@ -47,6 +49,10 @@ export default function Mint({ secret }: { secret: Secret }) {
       secret.currentDate !== 0 &&
       userAddress !== ''
     ) {
+      await checkSecret({
+        secretName: secret.secretName,
+        address: userAddress,
+      })
       await pushSecret({
         secretName: secret.secretName,
         secretValue: secret.secretValue,
@@ -56,6 +62,13 @@ export default function Mint({ secret }: { secret: Secret }) {
       alert('All fields are required')
     }
   }
+
+  useEffect(() => {
+    console.log('checkSecret_data', checkSecret_data)
+    if (!checkSecret_data) {
+      write?.()
+    }
+  }, [checkSecret_data, write])
 
   useEffect(() => {
     if (
@@ -76,7 +89,6 @@ export default function Mint({ secret }: { secret: Secret }) {
         disabled={write && !isLoading && !secretReady}
         onClick={() => {
           pushSecretFunction()
-          write?.()
         }}
       >
         {isLoading ? 'Minting...' : 'Push Secret'}
