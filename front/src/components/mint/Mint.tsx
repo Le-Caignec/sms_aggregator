@@ -12,6 +12,7 @@ import {
   useContractWrite,
   useWaitForTransaction,
 } from 'wagmi'
+import { useEffect, useState } from 'react'
 
 //global variables
 const contractAddress_SMS_Aggregator = process.env
@@ -23,6 +24,7 @@ export default function Mint({ secret }: { secret: Secret }) {
     pushSecret,
     { data: pushSecret_data, isSuccess: pushSecret_data_sucess, error: msg },
   ] = usePushSecretMutation()
+  const [secretReady, setSecretReady] = useState(false)
 
   const { config } = usePrepareContractWrite({
     address: contractAddress_SMS_Aggregator,
@@ -55,10 +57,23 @@ export default function Mint({ secret }: { secret: Secret }) {
     }
   }
 
+  useEffect(() => {
+    if (
+      secret.secretName !== '' &&
+      secret.secretDescription !== '' &&
+      secret.secretValue !== '' &&
+      secret.currentDate !== 0
+    ) {
+      setSecretReady(true)
+    } else {
+      setSecretReady(false)
+    }
+  }, [secret])
+
   return (
     <div>
       <Button
-        disabled={!write || isLoading}
+        disabled={write && !isLoading && !secretReady}
         onClick={() => {
           pushSecretFunction()
           write?.()
@@ -74,6 +89,7 @@ export default function Mint({ secret }: { secret: Secret }) {
               href={`https://blockscout-bellecour.iex.ec/tx/${data?.hash}`}
               target="_blank"
               rel="noreferrer"
+              style={{ color: '#ff8700' }}
             >
               BlockScout
             </a>

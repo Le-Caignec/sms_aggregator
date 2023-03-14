@@ -1,7 +1,14 @@
+
 export function timestampToDateString(timestamp: number) {
-    const date = new Date(timestamp * 1000) // convert to milliseconds
-    const day = date.getDate().toString().padStart(2, '0')
-    const month = (date.getMonth() + 1).toString().padStart(2, '0') // add 1 because getMonth() returns 0-indexed months
-    const year = date.getFullYear().toString()
-    return `${day}/${month}/${year}`
-  }
+  // Create a new Date object from the timestamp in milliseconds
+  const dateObj = new Date(timestamp);
+
+  // Get the day, month, and year values from the Date object
+  const day = dateObj.getDate();
+  const month = dateObj.getMonth() + 1; // Add 1 to adjust for zero-based month indexing
+  const year = dateObj.getFullYear();
+
+  // Format the day, month, and year values as a string in dd/mm/yyyy format
+  const formatted_date = `${day}/${month}/${year}`;
+  return formatted_date
+}

@@ -36,7 +36,7 @@ export default function CheckSecret() {
               <Col key={id}>
                 <Secret
                   clef={key}
-                  date={date}
+                  date={parseInt(date)}
                   description={description as string}
                 />
               </Col>

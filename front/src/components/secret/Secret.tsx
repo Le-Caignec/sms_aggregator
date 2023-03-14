@@ -10,8 +10,6 @@ export type SecretProps = {
   description: string | undefined
 }
 
-
-
 export default function Secret(props: SecretProps) {
   const [show, setShow] = useState<boolean>(false)
   const handleClose = () => setShow(false)
@@ -24,7 +22,6 @@ export default function Secret(props: SecretProps) {
           <Card.Subtitle className="mb-2 text-muted">
             {timestampToDateString(props.date)}
           </Card.Subtitle>
-          <Card.Text>{props.description}</Card.Text>
         </Card.Body>
       </Card>
       <ModalSecret show={show} handleClose={handleClose} secret={props} />
