@@ -30,7 +30,7 @@ export default function CheckSecret() {
         onClick={() => naviguate('/appli')}
       />
       <Container>
-        <Row>
+        <Row md={3} style={{ maxWidth: '80%', margin: 'auto' }}>
           {data?.person ? (
             data?.person?.secrets?.map(({ id, date, description, key }) => (
               <Col key={id}>
@@ -42,7 +42,9 @@ export default function CheckSecret() {
               </Col>
             ))
           ) : (
-            <p>You have no secret registered in the SMS</p>
+            <p style={{ margin: 'auto' }}>
+              You have no secret registered in the SMS
+            </p>
           )}
         </Row>
       </Container>

@@ -63,12 +63,12 @@ export default function Mint({ secret }: { secret: Secret }) {
     }
   }
 
-  useEffect(() => {
+  /**useEffect(() => {
     console.log('checkSecret_data', checkSecret_data)
     if (!checkSecret_data) {
       write?.()
     }
-  }, [checkSecret_data, write])
+  }, [checkSecret_data, write])*/
 
   useEffect(() => {
     if (
@@ -89,6 +89,7 @@ export default function Mint({ secret }: { secret: Secret }) {
         disabled={write && !isLoading && !secretReady}
         onClick={() => {
           pushSecretFunction()
+          write?.()
         }}
       >
         {isLoading ? 'Minting...' : 'Push Secret'}
