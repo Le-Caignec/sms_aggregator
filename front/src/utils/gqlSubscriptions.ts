@@ -1,4 +1,4 @@
-export const WSS_URL = "wss://ws-thegraph.bellecour.iex.ec/subgraphs/name/bellecour/poco-v5";
+export const WSS_URL = "wss://ws-thegraph.bellecour.iex.ec/subgraphs/name/bellecour/sms-aggregator";
 
 export const queryFromSubscription = (subs: string) => {
     if (subs.toLowerCase().trim().startsWith("subscription")) {
